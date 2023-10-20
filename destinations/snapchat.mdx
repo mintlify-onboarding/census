@@ -1,0 +1,54 @@
+---
+title: "Snapchat"
+---
+
+## 🏃‍♀️ Getting Started
+
+1. In Census, navigate to the **Destinations** page in Census and click **New Destination**.
+
+2. Select **Snapchat** from the menu.
+
+3. Follow the OAuth flow to connect to your Snapchat account.
+
+![](/images/destinations/Screen%20Shot%202022-04-25%20at%204.23.34%20PM.png)
+
+Enter your Snapchat credentials to complete the OAuth flow.
+
+## 🗄 Supported Objects
+
+| Object Name      | Supported? | Identifiers                |
+| ---------------- | ---------- | -------------------------- |
+| Conversion Event | ✅        | External ID                |
+| Customer List    | ✅        | Mobile Ad ID, Email, Phone |
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more Snapchat objects.
+
+### Field Normalization
+
+Census does not automatically normalize PII fields sent to Snapchat. When providing values to Census, please apply the normalization specified by Snapchat:
+
+* [Conversion Events](https://marketingapi.snapchat.com/docs/conversion.html#data-hygiene)
+
+* [Customer List](https://marketingapi.snapchat.com/docs/#customer-lists)
+
+Census also supports passing prehashed PII fields directly to Snapchat for increased data security. 
+
+| Property                            | Normalization                                                                                                                                                                                                      | Hash Method          |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- |
+| Email                               | Trim leading and trailing whitespaceLowercase                                                                                                                                                                      | Lowercase Hex SHA256 |
+| Mobile Advertiser ID (IDFA or GAID) | Lowercase                                                                                                                                                                                                          | Lowercase Hex SHA256 |
+| Phone Number                        | Include country code (remove any double 0 in front of the country code)If the number itself begins with a 0 this should be removedExclude any non-numeric characters such as whitespace, parentheses, ‘+’, or ‘-’. | Lowercase Hex SHA256 |
+
+## 🔄 Supported Sync Behaviors
+
+| Behaviors        | Supported? | Objects          |
+| ---------------- | ---------- | ---------------- |
+| Update or Create | ✅        | Customer List    |
+| Append           | ✅        | Conversion Event |
+| Mirror           | ✅        | Customer List    |
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more sync behaviors.
+
+## 🚑 Need help connecting to Snapchat?
+
+Contact us via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com/) chat.

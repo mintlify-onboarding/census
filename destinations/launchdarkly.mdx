@@ -1,0 +1,55 @@
+---
+title: "LaunchDarkly"
+---
+
+## 🏃‍♀️ Getting Started
+
+1. Click **Add Service** and select **LaunchDarkly** from the menu.
+
+2. Open the LaunchDarkly app in another window to find the following credentials:
+
+#### Service Access Token
+
+Create a new token from **Account settings** \> **Authorization**. Add an inline role/custom policy and define granular permissions. You will need to select your desired environment and add the action `importEventData` if you want to sync event data as well as your desired project's metrics and add the `All Actions` action if you want to sync to metrics. Check the box next to **This is a service token**.
+
+Optionally, you may also use an admin permission token but this is not a recommended option.
+
+![](/images/destinations/LaunchDarkly%20(6).png)
+
+1 Create a Service Access Token from the LaunchDarkly app.
+
+#### Project Key, Environment Key, and Environment ID
+
+Go to **Account settings** \> **Projects** and copy the **Project Key,** **Environment Key,** and **Environment ID** (LaunchDarkly uses Environment ID and Client-side ID interchangeably) as shown in the screenshot below. You will need to create separate Environment Keys for each Environment you wish to sync to.
+
+![](/images/destinations/LaunchDarkly%20(5).png)
+
+## 🔀 Supported Objects and Behaviors
+
+| **Object Name** | **Supported?** | **Identifiers** | **Behaviors**    |
+| --------------- | -------------- | --------------- | ---------------- |
+| Metric          | ✅              | Key             | Update or Create |
+| Metric Event    | ✅              | N/A             | Append           |
+| Synced Segments | ✅              | User ID         | Mirror           |
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more LaunchDarkly objects and/or behaviors.
+
+### Metrics
+
+Metrics measure audience behaviors affected by the flags in your experiments. You can use metrics to track all kinds of things, from how often customers access a URL to how long that URL takes to load a page, etc
+
+You can use Census to both Create or Update Metric definitions, or also send Metric Events in order to log data points that you've captured separately from your typical LaunchDarkly metric path.
+
+### Synced Segments
+
+Census supports LaunchDarkly's Synced Segments with [Audience Syncs](/basics/core-concept/audience-syncs). You can use Census to send any of your segments to LaunchDarkly. Synced Segments are very straightforward, with only two details you need to consider:
+
+* **ID** \- This whatever Identifier you use with LaunchDarkly to identify those context types. This could be your internal ID for a user or their email address. LaunchDarkly will happily accept whatever value you send here but in order for the segment to be useful, it must match the ID you are using with LaunchDarkly.
+
+* **Context** \- This is the "type" of things in your segment. It can be the standard LaunchDarkly contexts such as Users or Companies, or any custom context you have created.
+
+![](/images/destinations/LaunchDarkly%20(2).png)
+
+## 🚑 Need help connecting to LaunchDarkly?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.

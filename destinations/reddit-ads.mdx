@@ -1,0 +1,33 @@
+---
+title: "Reddit Ads"
+---
+
+## 🏃‍♀️ Getting Started
+
+1. Navigate to the **Destinations** page in Census and click **New Destination**.
+
+2. Select **Reddit Ads** from the menu.
+
+3. Proceed through the OAuth flow to connect your Reddit Ads account to Census.
+
+![](/images/destinations/reddit-ads.png)
+
+Connect your Reddit Ads account to Census.
+
+## 🔀 Supported Objects and Behaviors
+
+| **Object Name**  | **Supported?** | **Sync Keys** | **Behaviors** |
+| ---------------- | -------------- | ------------- | ------------- |
+| Conversion Event | ✅              | Any unique ID | Append        |
+
+### Field details
+
+* `event_at`: The RFC3339 timestamp when the conversion event occurred
+
+* `tracking_type`: Must be one of the following according to [Reddit's API documentation](https://ads-api.reddit.com/docs/#tag/Conversions/paths/~1api~1v2.0~1conversions~1events~1{account%5Fid}/post): `PageVisit`, `ViewContent`, `Search`, `AddToCart`, `AddToWishlist`, `Purchase`, `Lead`, `SignUp`, `Custom`
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more Reddit Ads objects and/or behaviors.
+
+## 🚑 Need help connecting to Reddit Ads?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.

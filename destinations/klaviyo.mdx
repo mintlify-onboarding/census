@@ -1,0 +1,189 @@
+---
+title: "Klaviyo"
+---
+
+## 🏃‍♀️ Getting Started
+
+This guide shows you how to use Census to connect your Klaviyo account to your data warehouse and create your first sync.
+
+### Prerequisites
+
+Before you begin, you'll need the following:
+
+* Census account: If you don't have this already, [start with a free trial](https://app.getcensus.com/).
+
+* Klaviyo account
+
+* Have the proper credentials to access to your data source. See our docs for each supported data source for further information:  
+   * [Azure Synapse](/sources/azure-synapse)  
+   * [Databricks](https://docs.getcensus.com/sources/databricks)  
+   * [Elasticsearch](https://docs.getcensus.com/sources/elasticsearch)  
+   * [Google BigQuery](https://docs.getcensus.com/sources/google-bigquery)  
+   * [Google Sheets](https://docs.getcensus.com/sources/google-sheets)  
+   * [MySQL](https://docs.getcensus.com/sources/mysql)  
+   * [Postgres](https://docs.getcensus.com/sources/postgres)  
+   * [Redshift](https://docs.getcensus.com/sources/redshift)  
+   * [Rockset](https://docs.getcensus.com/sources/rockset)  
+   * [Snowflake](https://docs.getcensus.com/sources/snowflake)  
+   * [SQL Server](https://docs.getcensus.com/sources/sql-server)
+
+### Step 1: Connect Klaviyo
+
+1. 1.  
+Log into Census and navigate to [**Destinations**](https://app.getcensus.com/destinations).
+
+2. 2.  
+Click **New Destination** and select Klaviyo from the dropdown list.
+
+3. 3.  
+Paste in your Klaviyo API Key. (See [Klaviyo's Help Center](https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys) for details on finding or generating API keys.)
+
+Your end state should look something like this: 👇
+
+![](/images/destinations/202201_Klaviyo_Connection.png)
+
+Destinations page with Klaviyo
+
+### Step 2: Connect your data warehouse
+
+The steps for connecting your data warehouse will depend on your technology. See the following guides:
+
+* [Databricks](/sources/databricks)
+
+* [Google BigQuery](/sources/google-bigquery)
+
+* [Google Sheets](/sources/google-sheets)
+
+* [Postgres](/sources/postgres)
+
+* [Redshift](/sources/redshift#allowed-ip-addresses)
+
+* [Snowflake](/sources/snowflake)
+
+After setting up your warehouse, your Destinations page should look something like this: 👇
+
+![](/images/destinations/202201_Klaviyo_Connection_2.png)
+
+Destinations page with Klaviyo and source warehouse
+
+### Step 3: Create your model
+
+When defining models, you'll write SQL queries to select the data you want to see in Klaviyo. This can be as simple as selecting everything in a specific database table or as complex as creating new calculated values.
+
+1. From inside your Census account, navigate to the **Models** page.
+
+2. Click **Add Model**.
+
+3. Enter a name for your model. You'll use this to select the model later.
+
+4. Enter your SQL query. If you want to test the query, use the **Preview** button.
+
+5. Click **Save Model**.
+
+![](/images/destinations/202201_Model_Page.png)
+
+Basic SQL query for a new model
+
+### Step 4: Create your first sync
+
+The sync will move data from your warehouse to Klaviyo. In this step, you'll define how that will work.
+
+1. From inside your Census account, navigate to the [**Syncs**](https://app.getcensus.com/syncs) page and click **Add Sync**.
+
+2. Under **What data do you want to sync?**, choose your data warehouse as the **Connection** and your model as the **Source**.
+
+3. Under **Where do you want to sync data to?**, choose Klaviyo as the **Connection** and "Profile" as the **Object**. (See [Supported objects](/destinations/klaviyo#supported-objects).)
+
+4. Under **How should changes to the source be synced?**, choose **Update or Create**. (See [Supported sync behaviors](/destinations/klaviyo#supported-sync-behaviors).)
+
+5. Under **How are source and destination records matched?**, select an **Identifier** for the model and for Klaviyo. We recommend using an internal ID when possible. (See [Supported objects](/destinations/klaviyo#supported-objects).)
+
+6. Under **Which properties should be updated?**, choose to update **Specific Properties** or **Sync All Properties**.
+
+7. Set up the mapping for the [List property](/destinations/klaviyo#syncing-the-list-property) and any other properties you want to update by mapping a column in your model to a property in Klaviyo.
+
+8. Click **Next**. This will open the **Confirm Details** page where you can see a recap of your setup.
+
+9. If you want to start a sync immediately, set the **Run a sync now?** checkbox.
+
+10. Click **Create Sync.**
+
+When configuring your sync, the page should look something like this: 👇
+
+![](/images/destinations/202201_Klaviyo_Sync.png)
+
+Sync setup for Klaviyo
+
+### Step 5: Confirm the synced data in Klaviyo
+
+Once your sync is complete, it's time to check your data. Open Klaviyo and check that the profiles updated correctly.
+
+If everything went well, that's it! You've started syncing data from your warehouse to Klaviyo! [🥳️](https://emojikeyboard.org/copy/Partying%5FFace%5FEmoji%5F%F0%9F%A5%B3%EF%B8%8F?utm%5Fsource=extlink)
+
+And if anything went wrong, contact the [Census support team](mailto:support@getcensus.com) to get some help.
+
+## 💡 Things to know about the Klaviyo connector
+
+### Syncing the List property
+
+All profiles in Klaviyo belong to at least one list. All syncs must include the **List** property to ensure that profiles in Klaviyo are valid.
+
+We recommend creating a list specifically for syncing. For example, you could use a Klaviyo list called "Census Uploads" that simply includes every profile created or updated by a Census sync. Note that updating through Census sync will only add profiles to additional lists; it cannot remove a profile from a list.
+
+![](/images/destinations/202201_Klaviyo_List_Property.png)
+
+Syncing the Klaviyo list property
+
+To update the **List** property, you'll need to provide the list **ID** or **Name** values as a JSON array of strings, for example:
+
+```
+["List A", "List B", "List C"]
+```
+
+```
+["RYkk48", "Xmpet6", "DyreR0"]
+```
+
+## Syncing Updates to Profile
+
+To sync updates to Profiles within Klaviyo there is some set up that will need to be done on the Klaviyo side.
+
+You'll need to set up a Segment within Klaviyo that pulls in all users in your Klaviyo instance and grab the ID of the created Segment.
+
+### Steps:
+
+* Create a Segment in Klaviyo with all users. This can be accomplished by adding a condition like email is not NULL or something else like that which makes sense for your data. (Example provided [here](https://community.klaviyo.com/lists-segments-and-profiles-35/how-can-i-export-all-profiles-into-one-customer-list-464) within Klaviyo).
+
+* Once created grab the Segment Id from the url
+
+![](/images/destinations/Screenshot%202023-03-22%20at%2012.02.38%20PM.png)
+
+* Add the Segment ID to the **All Profiles Segment ID** field within your Klaviyo connection in Census (screenshot).
+
+![](/images/destinations/Screenshot%202023-03-22%20at%2011.56.52%20AM.png)
+
+## 🗄 Supported objects
+
+| **Object Name** | **Supported?** | **Sync Keys**                                  |
+| --------------- | -------------- | ---------------------------------------------- |
+| Profile         | ✅              | External ID (recommended), Email, Phone Number |
+| Profile & List  | ✅              | External ID (recommended), Email, Phone Number |
+
+[Let us know](mailto:support@getcensus.com) if you want Census to support additional objects for Klaviyo.
+
+## 🔄 Supported sync behaviors
+
+| **Behavior**     | **Supported?** | **Objects**    |
+| ---------------- | -------------- | -------------- |
+| Update or Create | ✅              | All            |
+| Update Only      | ✅              | Profile        |
+| Mirror           | ✅              | Profile & List |
+| Delete           | ✅              | Profile        |
+
+Learn about all of our sync behaviors in [Core Concepts](/basics/core-concept#sync-behaviors).
+
+[Let us know](mailto:support@getcensus.com) if you want Census to support additional sync behaviors for Klaviyo.
+
+## 🚑 Need help connecting to Klaviyo?
+
+You can send our [support team an email](mailto:support@getcensus.com) at support@getcensus.com or start a conversation from the in-app chat.

@@ -1,0 +1,92 @@
+---
+title: "LinkedIn"
+---
+
+## 🏃‍♀️ Getting Started
+
+In this guide, we will show you how to connect LinkedIn to Census.
+
+### Prerequisites
+
+* Have your Census account ready. If you need one, [create a Free Trial Census account](https://app.getcensus.com/) now.
+
+* Have your LinkedIn account (associated with your ads) ready, including the username and password.
+
+* Have your data source properly configured within Census. See our docs for each supported data source for further information:  
+   * [Azure Synapse](/sources/azure-synapse)  
+   * [Databricks](https://docs.getcensus.com/sources/databricks)  
+   * [Elasticsearch](/sources/elasticsearch)  
+   * [Google BigQuery](https://docs.getcensus.com/sources/google-bigquery)  
+   * [Google Sheets](https://docs.getcensus.com/sources/google-sheets)  
+   * [MySQL](/sources/mysql)  
+   * [Postgres](https://docs.getcensus.com/sources/postgres)  
+   * [Redshift](https://docs.getcensus.com/sources/redshift)  
+   * [Rockset](https://docs.getcensus.com/sources/rockset)  
+   * [Snowflake](https://docs.getcensus.com/sources/snowflake)  
+   * [SQL Server](/sources/sql-server)
+
+### Step 1: Connect LinkedIn
+
+* Once you are in Census, navigate to [Destinations](https://app.getcensus.com/destinations)
+
+* Click the **New Destination** button
+
+![](/images/destinations/LinkedIn%20Connection%20Button.png)
+
+Select LinkedIn in the dropdown list
+
+![](/images/destinations/Confirm%20Census%20Connecting.png)
+
+Click Confirm
+
+* You'll be taken to a LinkedIn OAuth screen
+
+![](/images/destinations/LinkedIn%20Username%20and%20Password%20Oauth.png)
+
+Sign in with Email/Phone and Password
+
+* You'll be taken back to Census where you need to select the Ads Account you want to sync data into
+
+![](/images/destinations/Choose%20LI%20Account.png)
+
+If you have multiple, select the one of interest from the drop down
+
+### Step 2: Create a Model
+
+Now navigate to the [Model section of our Dashboard](https://app.getcensus.com/models).‌
+
+Here you will have to write SQL queries to select the data you want to send to LinkedIn. Here are some ideas of data you should select‌.
+
+* Current customers to advertise near renewal period
+
+* Target Companies / Users in your Ideal Customer Profile (ICP)
+
+* Competitors to exclude from advertising
+
+## 🗄 Supported Objects
+
+Census currently supports syncing to the following LinkedIn objects through audience matching (based on [this documentation](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/matched-audiences/matched-audiences)). The more information provided, the match rate will improve.
+
+It is required to provide a DMP Segment Id for both objects that are supported
+
+| **Object Name** | **Supported?** | **Sync Keys**                                                                                  |
+| --------------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| Company List    | ✅              | Company Email Domain, Company Name, Company Page URL, Company Website Domain, Organization Urn |
+| User List       | ✅              | Email (unhashed, SHA256/512 hashed), Google Advertising Id, Apple Advertising Id               |
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more objects for LinkedIn.
+
+## 🔄 Supported Sync Behaviors
+
+Learn more about all of our sync behaviors on our [Core Concepts page](/basics/core-concept#the-different-sync-behaviors).
+
+| **Behaviors**    | **Supported?** | **Objects** |
+| ---------------- | -------------- | ----------- |
+| Update or Create | ✅              | All         |
+| Mirror           | ✅              | All         |
+
+[Contact us](mailto:support@getcensus.com) if you want Census to support more Sync behaviors for LinkedIn.
+
+## 🚑 Need help connecting to LinkedIn?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.

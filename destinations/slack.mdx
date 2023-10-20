@@ -1,0 +1,104 @@
+---
+title: "Slack"
+---
+
+## 🏃‍♀️ Getting Started
+
+‌In this guide, we will show you how to connect Slack to Census.
+
+### 📋 Prerequisites
+
+* Have your Census account ready. If you need one, [start a free trial now](https://app.getcensus.com/) (or take a look at our [pricing for paid plans](https://www.getcensus.com/pricing)).
+
+* Have your Slack account ready.
+
+* Have the proper credentials to access to your data source. See our [docs](https://github.com/sutrolabs/census-docs/blob/main/destinations/broken-reference/README.md) for each supported data source for further information.
+
+## 1️⃣ Connect Census to Slack
+
+In the [**Destinations**](https://app.getcensus.com/destinations) page in Census, Click the **New Destination** button in the top right, and select Slack.
+
+If you are not already logged in to Slack, you will be redirected to a page to log in to Slack to authorize your account to use Census. Once you are logged in, you'll see a page like the image below, confirming you want to authorize Census.
+
+![](/images/destinations/Screen%20Shot%202021-09-13%20at%209.39.16%20AM.png)
+
+Once you've authorized Census, you'll be redirected back to the Destinations page in Census and you should see your Slack connection there.
+
+## 2️⃣ Connect Census to your data source
+
+See our [docs](https://github.com/sutrolabs/census-docs/blob/main/destinations/broken-reference/README.md) for each supported data source for further information.
+
+## 3️⃣ Create your first Census model
+
+Navigate to the **Models** page in Census and click the **Add Model** button.
+
+Here you can a write SQL query to select the data you want to send to Slack.
+
+Once you have created your model, give it a useful name, and click **Save Model**.
+
+## 4️⃣ Create your Census Sync
+
+Navigate to the [**Syncs**](https://app.getcensus.com/syncs) page in Census and click the **New Sync** button.
+
+### 🎚 Setup your Source, Destination, and Sync Key
+
+You'll need to start by specifying how to identify entries in your data warehouse that should trigger a Sync:
+
+* For Source > **Connection**, select the data warehouse you connected in step 2.
+
+* For Source > **Source**, select the model you created in step 3.
+
+* For Destination > **Connection**, select Slack
+
+* For Destination > **Object**, Message should be auto-selected
+
+* Next, pick the column that uniquely identifies each record in your data source. Census will use this to identify new records that need to be used to send messages to Slack.
+
+![](/images/destinations/Screenshot%202023-06-21%20at%202.53.41%20PM.png)
+
+### 💬 **Setup your Message**
+
+* Select the Slack channel you'd like to send messages to.
+
+* Finally, use the text editor to customize the message that you wish to send.  
+   * To embed values from the trigger columns or to mention users or channels from your Slack account, use the dropdown that will appear. If the list is long, try the search function.
+
+![](/images/destinations/Screenshot%202023-06-21%20at%202.56.10%20PM.png)
+
+### 🧪 Test your Slack message
+
+* Click the Run Test button to see a single random record sent to your destination. For testing, you may want to temporarily change the destination message yourself.
+
+![](/images/destinations/Screenshot%202023-06-21%20at%203.16.57%20PM.png)
+
+### ☑️ Finishing touches
+
+* Click the **Finish** button and you'll be taken to your new notification. You can now Schedule the sync to run on a schedule or run it manually yourself.
+
+![](/images/destinations/CleanShot%202022-10-11%20at%2011.02.21%402x.png)
+
+Configure your new Notification to run on a set schedule or run it manually.
+
+Reminder: Census will send records to a Slack channel one at a time.
+
+## 🗄️ Supported Objects
+
+| Object Name | Supported? | Identifiers              |
+| ----------- | ---------- | ------------------------ |
+| Message     | ✅          | Custom message template. |
+
+Census can send data to **all** public channels and any private channels that Census has been explicitly invited to (e.g. `/invite @census`).
+
+## 🔄 Supported Sync Behaviors
+
+| **Behaviors** | **Supported?** | **Objects** |
+| ------------- | -------------- | ----------- |
+| **Append**    | ✅              | channel     |
+
+Census will only write new records to a specific channel when new records appear in your data warehouse.
+
+## 🚑 Need help connecting to Slack?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.
+
+If you have questions about our privacy policy, you can check it out [here](https://www.getcensus.com/legal/privacy-policy).

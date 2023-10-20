@@ -1,0 +1,78 @@
+---
+title: "Microsoft Advertising"
+---
+
+## 🏃‍♀️ Getting Started
+
+In this guide, we will show you how to connect Microsoft Ads to Census.
+
+### Prerequisites
+
+* Have your Census account ready. If you need one, [create a Free Trial Census account](https://app.getcensus.com/) now.
+
+* Have your Microsoft Ads account ready.  
+   * To create Customer Match syncs, your Microsoft Ads Account will need access to the Customer Match feature. See [Microsoft's Customer Match policy](https://about.ads.microsoft.com/en-us/solutions/audience-targeting/customer-match) for more details.
+
+* Have the proper credentials to access your data source. See our docs for each supported data source for further information:  
+   * [Azure Synapse](/sources/azure-synapse)  
+   * [Databricks](https://docs.getcensus.com/sources/databricks)  
+   * [Elasticsearch](https://docs.getcensus.com/sources/elasticsearch)  
+   * [Google BigQuery](https://docs.getcensus.com/sources/google-bigquery)  
+   * [Google Sheets](https://docs.getcensus.com/sources/google-sheets)  
+   * [MySQL](https://docs.getcensus.com/sources/mysql)  
+   * [Postgres](https://docs.getcensus.com/sources/postgres)  
+   * [Redshift](https://docs.getcensus.com/sources/redshift)  
+   * [Rockset](https://docs.getcensus.com/sources/rockset)  
+   * [Snowflake](https://docs.getcensus.com/sources/snowflake)  
+   * [SQL Server](https://docs.getcensus.com/sources/sql-server)
+
+### 1\. Connect Microsoft Ads
+
+* Once you are in Census, navigate to [Destinations](https://app.getcensus.com/destinations)
+
+* Click the **New Destination** button
+
+* Select Microsoft Advertising in the dropdown list.
+
+![](/images/destinations/Screen%20Shot%202022-03-11%20at%209.50.12%20AM.png)
+
+Follow Microsoft OAuth flow to connect to your Microsoft Advertising account.
+
+![](/images/destinations/Screen%20Shot%202022-03-11%20at%209.54.12%20AM.png)
+
+![](/images/destinations/Screen%20Shot%202022-03-11%20at%209.56.02%20AM.png)
+
+Finally, select the Microsoft Advertising account you'd like to sync to
+
+![](/images/destinations/Screen%20Shot%202022-03-11%20at%2010.01.08%20AM.png)
+
+### 2\. Connect your Data Warehouse
+
+Please follow one of our short guides depending on your data warehouse technology
+
+* [Redshift](https://help.getcensus.com/article/10-configuring-redshift-postgresql-access)
+
+* [Postgres](https://help.getcensus.com/article/10-configuring-redshift-postgresql-access)
+
+* [BigQuery](https://help.getcensus.com/article/21-configuring-bigquery-access)
+
+* [Snowflake](https://help.getcensus.com/article/8-configuring-snowflake-access)
+
+* [Databricks](/sources/databricks)
+
+After setting up your warehouse, your Census sync should look like this:
+
+![](/images/destinations/Screen%20Shot%202022-03-11%20at%2010.08.23%20AM.png)
+
+## 🗄 Supported Objects
+
+| Service                           | Object Name | Supported? | Identifiers                             |
+| --------------------------------- | ----------- | ---------- | --------------------------------------- |
+| Customer Match Lists ( Audiences) | Customer    | ✅          | User ID, Mobile ID, Email, Phone Number |
+| Offline Conversions               | Click, Call | ✅          | Click ID, Caller ID                     |
+
+[Contact us](mailto:support@getcensus.com) if you're looking for additional Microsoft Ads objects.
+
+## 🚑 Need help connecting to Microsoft Ads?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.

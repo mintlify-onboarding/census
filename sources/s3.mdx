@@ -1,0 +1,120 @@
+---
+title: "Amazon S3"
+---
+
+The Amazon S3 enables treating CSV files like tables from other databases, without having to load them first. To support this, the S3 source includes a basic indexing process that will manage the data available to Census.
+
+### Supported File Structure
+
+Census will automatically scan and index your S3 bucket starting at the **prefix**. CSV files must be:
+
+* Uncompressed, UTF-8 encoded, comma delimited CSV with `.csv` file extension
+
+* Include a header row (Census will use headers as source column names)
+
+* Represent null values with the string `#N/A`
+
+* Values that may include commas should be wrapped by double quotes. Values that include double quotes should be escaped with a second double quote. For example, to send the value `Hello, "World"`, the row in the csv would look like `othercolumn,"Hello, ""World""", othercolumn`.
+
+Census treats each **folder path as a unique data source** in Census and considers the file name to be a version of the data within that path. Census will always select the newest data in that path based on timestamp. S3 Sources use the [Basic Sync Engine](https://docs.getcensus.com/sources/overview#sync-engines) to store an external snapshot of source data.
+
+So when updating data in S3, you can either replace the existing file or add a newer version. Census will use the new data and perform an incremental sync if possible (keeping the previous version in S3 is not necessary to enable incremental updates).
+
+### Creating an S3 Connection
+
+Census uses role-based authentication to connect to your bucket, as [recommended by AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id%5Froles%5Fcommon-scenarios%5Fthird-party.html). This involves a three-step "handshake" between your AWS account and Census.
+
+These examples use the AWS CLI, but you can use the AWS Console, API, Terraform, or other tools instead to accomplish the same setup tasks.
+
+1. 1.  
+Get your AWS Account ID; you'll use this to create a placeholder AssumeRolePolicy that we will replace with the Census AWS Account ID in a later step:  
+```  
+aws sts get-caller-identity  
+```  
+Use the `Account` value here (a 12-digit number) in the next step (replacing `${YOUR_AWS_ACCOUNT_NUMBER}`).
+
+2. 2.  
+Create an IAM role in your AWS account that provides read-only access to your S3 bucket and prefix. Throughout this example, we'll assume that your bucket name is `census-docs-example`, your region is `us-east-1`, and your prefix is `data/`:  
+```  
+aws iam create-role \  
+  --role-name CensusReadOnlyToS3 \  
+  --assume-role-policy-document '{  
+    "Version": "2012-10-17",  
+    "Statement": [{  
+      "Effect": "Allow",  
+      "Principal": {"AWS": "arn:aws:iam::${YOUR_AWS_ACCOUNT_NUMBER}:root"},  
+      "Action": "sts:AssumeRole"  
+    }]  
+  }'  
+```  
+This will return a JSON document containing an `Arn` for the role you just created - something like `"arn:aws:iam::${YOUR_AWS_ACCOUNT_NUMBER}:role/CensusReadOnlyToS3"`. Keep track of this role ARN because you will need it throughout the rest of the setup process.
+
+3. 3.  
+Grant your newly-created role read-only access to your S3 bucket. We'll do this using an inline policy, but there are many ways to manage permissions in AWS IAM, so choose the appropriate technique for your organization's needs.  
+```  
+aws iam put-role-policy \  
+  --role-name CensusReadOnlyToS3 \  
+  --policy-name CensusReadOnlyToS3 \  
+  --policy-document '{  
+    "Version": "2012-10-17",  
+    "Statement": [{  
+      "Effect": "Allow",  
+      "Action": [  
+        "s3:ListBucket",  
+        "s3:GetObject",  
+        "s3:GetObjectVersion",  
+        "s3:GetBucketLocation"  
+      ],  
+      "Resource": [  
+        "arn:aws:s3:::census-docs-example",  
+        "arn:aws:s3:::census-docs-example/*"  
+      ]  
+    }]  
+  }'  
+```  
+It's possible to further restrict this role to limit Census' access by object prefix, though we recommend using a dedicated bucket for sharing data with Census to keep roles and permissions simple.
+
+4. 4.  
+Navigate to the Census [Sources tab](https://app.getcensus.com/sources) and click "New Source", then select "S3" in the menu.
+
+5. 5.  
+Provide the **Region**, **Bucket Name**, **Role ARN**, and **Prefix** to Census, and click "Connect".
+
+6. 6.  
+Census will generate a unique external ID (`${CENSUS_EXTERNAL_ID}`) that helps secure the connection between your role and the Census AWS account (`${CENSUS_AWS_ACCOUNT_NUMBER}`) and display it on the next screen. Update your role to grant access to the Census AWS Account (instead of your own) and to require this external ID for all API calls:  
+```  
+aws iam update-assume-role-policy \  
+  --role-name CensusReadOnlyToS3 \  
+  --policy-document '{  
+    "Version": "2012-10-17",  
+    "Statement": [{  
+      "Effect": "Allow",  
+      "Principal": {"AWS": "arn:aws:iam::${CENSUS_AWS_ACCOUNT_NUMBER}:root"},  
+      "Action": "sts:AssumeRole",  
+      "Condition": {"StringEquals": {"sts:ExternalId": "${CENSUS_EXTERNAL_ID}"}}  
+    }]  
+  }'  
+```
+
+7. 7.  
+Click the "Test" button in the Census UI to verify that the connection has been configured successfully.
+
+## CSV Processing Modes
+
+![](/images/sources/CSV%20Processing%20Mode.png)
+
+We currently support two modes of operation when reading CSVs from your S3 bucket:
+
+* **Most Recent** (default) - We only consider the most recent file in the configured S3 prefix & folder group. That single file is interpreted as the entire dataset. This supports S3 use cases where a single file is being overwritten, or where a new version of a file is being added over time.
+
+* **Merge All** \- We take every file in the configured S3 prefix & folder group, and merge them all together into a single dataset. We'll interpret the dataset as every row from every file we find in the configured prefix. This supports S3 use cases where the source data set has been split up into multiple files. As additional files are added, they will be merged as well. To delete data from the dataset, either the row must be removed from a file or a file deleted completely. Note: In this mode, all CSVs must have the exact same set of columns names and order.
+
+## 💡Limitations
+
+* Because S3 does not support SQL queries, you cannot create SQL, dbt, or Looker models on S3 sources, nor can you use S3 sources with Census Entities or Segments.
+
+* S3 Sources do not currently support the sync tester
+
+## 🚑 Need help connecting to S3?
+
+[Contact us](mailto:support@getcensus.com) via support@getcensus.com or start a conversation with us via the [in-app](https://app.getcensus.com) chat.

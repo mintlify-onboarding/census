@@ -1,0 +1,132 @@
+---
+title: "Google Cloud Storage"
+---
+
+## Prerequisites
+
+* Have your Census account ready. If you need one, [create a Free Trial Census account](https://app.getcensus.com/) now.
+
+* Have your Google Cloud Storage Account in the [Browser tab](https://console.cloud.google.com/storage/browser/) on the bucket that you want to sync to.
+
+* Have the proper credentials to access to your data source. See our docs for each supported data source for further information:  
+   * [Azure Synapse](/sources/azure-synapse)  
+   * [Databricks](https://docs.getcensus.com/sources/databricks)  
+   * [Elasticsearch](https://docs.getcensus.com/sources/elasticsearch)  
+   * [Google BigQuery](https://docs.getcensus.com/sources/google-bigquery)  
+   * [Google Sheets](https://docs.getcensus.com/sources/google-sheets)  
+   * [MySQL](https://docs.getcensus.com/sources/mysql)  
+   * [Postgres](https://docs.getcensus.com/sources/postgres)  
+   * [Redshift](https://docs.getcensus.com/sources/redshift)  
+   * [Rockset](https://docs.getcensus.com/sources/rockset)  
+   * [Snowflake](https://docs.getcensus.com/sources/snowflake)  
+   * [SQL Server](https://docs.getcensus.com/sources/sql-server)
+
+### Step 1: Create a Google Cloud Storage Connection
+
+Our Google Cloud connector behaves a little differently than other Census connectors. Instead of going through an OAuth connection flow, we provide you a Google Identity address to which you grant Storage Object permissions.
+
+* In Census, navigate to [Destinations](https://app.getcensus.com/destinations)
+
+* Click the New Destination button, and select Google Cloud Storage
+
+* Paste the name of the GCS bucket, name the connection, and click the Save Connection button
+
+![](/images/destinations/Screen%20Shot%202021-11-03%20at%201.46.43%20PM.png)
+
+* Your new Google Cloud Storage connection will include a GCP service account for that specific Census connection. Click the copy button (  
+![](/images/destinations/copy-solid.svg)  
+) to save it to your clipboard.
+
+### Step 2: Grant Access to GCS
+
+* Now head to the Google Cloud Storage bucket that you want to sync to, and click into that bucket's details.
+
+* Click the Permissions tab on the Bucket, then click "Add Permissions".
+
+![](/images/destinations/Screen%20Shot%202021-11-03%20at%202.02.14%20PM.png)
+
+* Paste the credentials in the New Principals portion and select "Storage Object Admin."
+
+![](/images/destinations/GCS%20Add.png)
+
+You **will** be able to send a successful sync if the file path variables are unique per sync run by only granting this service account "Storage Object Creator", but the Test Connection in the next step will fail.
+
+* Click save to save the permission.
+
+* Then navigate back to the [Destinations](https://app.getcensus.com/destinations) page and click "Test" on the service.
+
+![](/images/destinations/Cloud%20Successful%20Connection.png)
+
+You are good to go!
+
+### Step 3: Create your first sync
+
+The sync will move data from your warehouse to your GCS bucket. In this step, you'll define how that will work.
+
+1. From inside your Census account, navigate to the [**Syncs**](https://app.getcensus.com/syncs) page and click **Add Sync**.
+
+2. Under **What data do you want to sync?**, choose your data warehouse as the **Connection** and your **source:** either a Model from the Census Models tab or a database table.
+
+3. Under **Where do you want to sync data to?**, choose the name you assigned in Step 1 (we used GCS) as the **Connection**. Enter the **File Path** for the file where data will sync. The path can accept variables that will populate when the sync runs. See [File Path Variables](/destinations/google-cloud-storage#file-path-variables). Confirm the file path in the **Template Preview** field.  
+\_\_  
+💡  
+_If the service account only has "Storage Object Creator" permissions, this file path needs to be unique per sync run_
+
+4. Under **How should changes to the source be synced?**, **Mirror** will be automatically selected. This is the only supported sync behavior for GCS.
+
+5. Under **Which properties should be updated?**, choose whether to sync only **Selected Properties** or **Sync All Properties**. Syncing all properties will automatically add new properties to the sync if the model or database table changes.
+
+6. To test your sync without actually syncing data, click **Run Test** and verify the results.
+
+7. Click the **Next** button to see the final preview which will have a recap of what will happen when you start the sync. If you're happy, check the Sync Now checkbox and save the sync.
+
+8. Confirm the data arrives in the GCS bucket!
+
+If you need any help configuring GCS, contact the [Census support team](mailto:support@getcensus.com) to get some help.
+
+## File Path
+
+### Variables
+
+When defining the **File Path** for an GCS sync, you can use variables that will be set when the sync runs. This allows you to create and sync to new files in the GCS bucket that reflect the date and time of the sync.
+
+| **Variable** | **Description**              | **Example Values** |
+| ------------ | ---------------------------- | ------------------ |
+| %Y           | 4-digit year                 | 1997               |
+| %y           | 2-digit year                 | 97                 |
+| %m           | month with zero padding      | 07, 12             |
+| %-m          | month without zero padding   | 7, 12              |
+| %d           | day with zero padding        | 03, 23             |
+| %-d          | day without zero padding     | 3, 23              |
+| %H           | 24 hour with zero padding    | 08, 18             |
+| %k           | 24 hour without zero padding | 8, 18              |
+| %I           | 12 hour with zero padding    | 08, 12             |
+| %l           | 12 hour without zero padding | 8, 12              |
+| %M           | minute with zero padding     | 04, 56             |
+| %S           | second with zero padding     | 06, 54             |
+
+### Update or Create Syncs
+
+Update or Create syncs upload your whole dataset on the first run and only new changes on subsequent runs. Each sync run saves to a different file. The first run saves with "full" at the end of the file name. For example, `filename_12_12_23_full.csv` if it runs on 12/12/2023\. Later syncs save with a timestamp at the end, like `filename_12_12_23_1702426195.csv`, so you can see how your data changes over time.
+
+## 🔄 Supported sync behaviors
+
+| **Behavior** | **Supported?** | **Objects** |
+| ------------ | -------------- | ----------- |
+| Mirror       | ✅              | All         |
+
+Learn about all of our sync behaviors in [Core Concepts](/basics/core-concept#sync-behaviors).
+
+[Let us know](mailto:support@getcensus.com) if you want Census to support additional sync behaviors for Google Cloud Storage.
+
+## 💡 Things to know
+
+* Currently, the connector only supports syncing for files up to 5GB.
+
+* Data arrives in one file to the designated bucket and file path.
+
+[Contact us](mailto:support@getcensus.com) if your use cases don't work with these limitations. We plan on addressing at least a few of these in the future!
+
+## 🚑 Need help connecting to Google Cloud Storage?
+
+You can send our [support team an email](mailto:support@getcensus.com) at support@getcensus.com or start a conversation from the in-app chat.
